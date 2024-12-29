@@ -22,8 +22,5 @@ jobs:
         with:
           dotnet-version: "8.x"
 
-      - name: Build the project
-        run: dotnet build
-
       - name: Run tests
-        run: dotnet test --no-build --configuration Release
+        run: dotnet test --configuration Release
