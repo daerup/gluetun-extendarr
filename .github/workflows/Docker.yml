@@ -47,4 +47,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: true
+          prerelease: true
           version: ${{ steps.version.outputs.version }}
+          body: Get the image from https://${{ env.IMAGE_NAME }}
