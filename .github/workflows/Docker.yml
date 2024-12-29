@@ -9,6 +9,7 @@ jobs:
   build-and-push:
     name: Build and Push Docker Image to GHCR
     runs-on: ubuntu-latest
+    permissions: write-all
     env:
       IMAGE_NAME: ghcr.io/${{ github.repository }}
 
@@ -47,6 +48,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.version.outputs.prefixed-v-version }}
+          tag_prefix: ""
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
