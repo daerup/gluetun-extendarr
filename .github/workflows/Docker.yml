@@ -42,14 +42,20 @@ jobs:
           context: .
 
       - name: Create Tag
-        id: create_tag
-        uses: jaywcjlove/create-tag-action@main
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.version.outputs.prefixed-v-version }}
+
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          release: true
+          tag: ${{ steps.version.outputs.prefixed-v-version }}
+          name: Release ${{ steps.version.outputs.prefixed-v-version }}
+          generateReleaseNotes: true
           prerelease: true
-          version: ${{ steps.version.outputs.prefixed-v-version }}
-          body: Get the image from https://${{ env.IMAGE_NAME }}:${{ steps.version.outputs.prefixed-v-version }}
 
       - name: Publish Docker image
         uses: docker/build-push-action@v2
