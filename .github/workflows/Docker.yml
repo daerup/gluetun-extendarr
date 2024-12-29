@@ -33,10 +33,10 @@ jobs:
           scheme: conventional_commits
           increment: patch
 
-      - name: publish image
+      - name: Build Docker image
         uses: docker/build-push-action@v2
         with:
-          push: true
+          push: false
           tags: "${{ env.IMAGE_NAME }}:${{ steps.version.outputs.prefixed-v-version }}"
           file: GluetunExtendarr.Console/Dockerfile
           context: .
@@ -48,5 +48,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           release: true
           prerelease: true
-          version: ${{ steps.version.outputs.version }}
-          body: Get the image from https://${{ env.IMAGE_NAME }}
+          version: ${{ steps.version.outputs.prefixed-v-version }}
+          body: Get the image from https://${{ env.IMAGE_NAME }}:${{ steps.version.outputs.prefixed-v-version }}
+
+      - name: Publish Docker image
+        uses: docker/build-push-action@v2
+        with:
+          push: true # Push the previously built image
+          tags: "${{ env.IMAGE_NAME }}:${{ steps.version.outputs.prefixed-v-version }}"
