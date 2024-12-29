@@ -37,7 +37,7 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v2
         with:
-          push: false
+          push: true
           tags: "${{ env.IMAGE_NAME }}:${{ steps.version.outputs.prefixed-v-version }}"
           file: GluetunExtendarr.Console/Dockerfile
           context: .
@@ -58,9 +58,3 @@ jobs:
           name: Release ${{ steps.version.outputs.prefixed-v-version }}
           generateReleaseNotes: true
           prerelease: true
-
-      - name: Publish Docker image
-        uses: docker/build-push-action@v2
-        with:
-          push: true # Push the previously built image
-          tags: "${{ env.IMAGE_NAME }}:${{ steps.version.outputs.prefixed-v-version }}"
