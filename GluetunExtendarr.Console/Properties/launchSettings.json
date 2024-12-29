@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "GluetunExtendarr.Console": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
