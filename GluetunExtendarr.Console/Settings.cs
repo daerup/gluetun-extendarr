@@ -6,9 +6,11 @@ namespace GluetunExtendarr.Console;
 public record Config
 {
     [ConfigurationKeyName("CONFIG_NAME")]
-    public string ConfigName { get; init; }
+    public string ConfigName { get; set; }
+    
     [ConfigurationKeyName("INPUT_DIR")]
-    public string InputDir { get; init; }
+    public string InputDir { get; set; }
+
     [ConfigurationKeyName("OUTPUT_DIR")]
-    public string OutputDir { get; init; }
+    public string OutputDir { get; set; }
 }

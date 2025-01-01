@@ -7,7 +7,6 @@ services:
     vpn-extension:
         container_name: vpn-extension
         environment:
-            TZ: ${TZ}
             CONFIG_NAME: ${OPENVPN_CONFIG}
         volumes:
             - ./.dev/configs:/input

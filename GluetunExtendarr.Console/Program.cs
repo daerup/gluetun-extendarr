@@ -2,22 +2,18 @@
 using GluetunExtendarr.Core;
 using Microsoft.Extensions.Configuration;
 
-var config = new ConfigurationBuilder()
+var settings = new ConfigurationBuilder()
               .AddJsonFile("appsettings.json")
               .AddEnvironmentVariables()
               .Build()
-              .Get<Config>()!;
+              .Get<Settings>()!;
 
-var fileDuplicator = new TemporaryFileCreator();
 
-string originalConfigFile = Path.Combine(config.InputDir, config.ConfigName);
-string duplicatedConfigFile = fileDuplicator.CopyToTempDir(originalConfigFile);
+var fileProvider = new ConfigConfigFileProvider(settings.ConfigName, settings.InputDir, settings.OutputDir);
 
 var resolver = new HostnameResolver();
-var manager = new OvpnFileManager(duplicatedConfigFile, new FileReader(), new FileWriter());
+var manager = new OvpnFileManager(fileProvider, new FileReader(), new FileWriter(), new FileDuplicator());
 
 string hostname = manager.GetRemote();
 var ip = resolver.Resolve(hostname).ToString();
-//manager.ReplaceRemote(ip);
-
-
+manager.ReplaceRemote(ip);
