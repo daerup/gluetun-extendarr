@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Runtime.InteropServices;
 using FluentAssertions;
 
 namespace GluetunExtendarr.Core.Test;
@@ -15,7 +14,7 @@ public class HostnameResolverTest
         var testee = new HostnameResolver();
 
         // Act
-        var result = testee.Resolve(hostname);
+        IPAddress result = testee.Resolve(hostname);
 
         // Assert
         result.ToString().Should().BeOneOf(ips);

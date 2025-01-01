@@ -4,7 +4,7 @@ public class TemporaryFileCreator : ITemporaryFileCreator
 {
     public string CopyToTempDir(string originalFile)
     {
-        var tempFile =  Path.GetTempFileName();
+        string tempFile =  Path.GetTempFileName();
         File.Copy(originalFile, tempFile, true);
         return tempFile;
     }

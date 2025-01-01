@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace GluetunExtendarr.Core;
+﻿namespace GluetunExtendarr.Core;
 
 public class OvpnFileManager(string filePath, IFileReader reader, IFileWriter writer) : IOvpnFileManager
 {
@@ -13,11 +11,11 @@ public class OvpnFileManager(string filePath, IFileReader reader, IFileWriter wr
     public string GetRemote() => this.GetLineSegments(this.GetRemoteLine())[OvpnFileManager.RemoteHostIndex];
     public void ReplaceRemote(string newRemote)
     {
-        var oldLine = this.GetRemoteLine();
+        string oldLine = this.GetRemoteLine();
         string[] segments = this.GetLineSegments(oldLine);
         segments[OvpnFileManager.RemoteHostIndex] = newRemote;
 
-        var newLine = string.Join(OvpnFileManager.SegmentSeparator, segments);
+        string newLine = string.Join(OvpnFileManager.SegmentSeparator, segments);
 
         string[] newContent = this.Content.Select(l => l == oldLine ? newLine : l).ToArray();
         writer.Write(filePath, newContent);

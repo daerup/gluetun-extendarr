@@ -1,33 +1,23 @@
-﻿// See https://aka.ms/new-console-template for more information
-
+﻿using GluetunExtendarr.Console;
 using GluetunExtendarr.Core;
 using Microsoft.Extensions.Configuration;
 
-Console.WriteLine("Hello, World!");
+var config = new ConfigurationBuilder()
+              .AddJsonFile("appsettings.json")
+              .AddEnvironmentVariables()
+              .Build()
+              .Get<Config>()!;
 
-var configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
+var fileDuplicator = new TemporaryFileCreator();
 
-
-var inputDir1 = configuration["INPUT_DIR"];
-var outputDir2 = configuration["OUTPUT_DIR"];
-var configName = configuration["CONFIG_NAME"];
-
-var inputDir = "";
-var outputDir = "";
-
-var newFile = "C:\\Users\\daerup\\Documents\\repos\\openvpn\\dev\\configs\\madrid.ovpn";
-
-while (true)
-{
-    Console.WriteLine($"Inputdir: {inputDir1}");
-    Thread.Sleep(TimeSpan.FromSeconds(10));
-}
-
+string originalConfigFile = Path.Combine(config.InputDir, config.ConfigName);
+string duplicatedConfigFile = fileDuplicator.CopyToTempDir(originalConfigFile);
 
 var resolver = new HostnameResolver();
-var manager = new OvpnFileManager(newFile, new FileReader(), new FileWriter());
+var manager = new OvpnFileManager(duplicatedConfigFile, new FileReader(), new FileWriter());
+
+string hostname = manager.GetRemote();
+var ip = resolver.Resolve(hostname).ToString();
+//manager.ReplaceRemote(ip);
 
 
-var hostname = manager.GetRemote();
-var ip = resolver.Resolve(hostname);
-//manager.ReplaceRemote(ip.ToString());
