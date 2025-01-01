@@ -5,11 +5,22 @@ ARG LAUNCHING_FROM_VS
 # This sets the base image for final, but only if LAUNCHING_FROM_VS has been defined
 ARG FINAL_BASE_IMAGE=${LAUNCHING_FROM_VS:+aotdebug}
 
+# VS uses --target base (for some fucking reason, what even is the point of LAUNCHING_FROM_VS?)
+ARG INPUT_DIR="/input"
+ARG OUTPUT_DIR="/output"
+ARG CONFIG_NAME="custom.conf"
+
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 
+ARG INPUT_DIR
+ARG OUTPUT_DIR
+ARG CONFIG_NAME
+ENV INPUT_DIR=$INPUT_DIR
+ENV OUTPUT_DIR=$OUTPUT_DIR
+ENV CONFIG_NAME=$CONFIG_NAME
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -40,7 +51,16 @@ RUN apt-get update \
 USER app
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/runtime-deps:8.0} AS final
+FROM ${FINAL_BASE_IMAGE:-mcr.microsoft.com/dotnet/nightly/runtime-deps:8.0-jammy-chiseled} AS final
+
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+ARG INPUT_DIR
+ARG OUTPUT_DIR
+ARG CONFIG_NAME
+ENV INPUT_DIR=$INPUT_DIR
+ENV OUTPUT_DIR=$OUTPUT_DIR
+ENV CONFIG_NAME=$CONFIG_NAME
+
 ENTRYPOINT ["./GluetunExtendarr.Console"]

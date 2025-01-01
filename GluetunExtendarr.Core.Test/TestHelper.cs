@@ -8,9 +8,9 @@ internal class TestHelper
     internal IEnumerable<string> GetSampleOvpnFile()
     {
         var assembly = Assembly.GetExecutingAssembly();
-        string resourceName = assembly.GetManifestResourceNames().Single(str => str.EndsWith(TestHelper.SampleFileName));
+        var resourceName = assembly.GetManifestResourceNames().Single(str => str.EndsWith(TestHelper.SampleFileName));
 
-        using Stream stream = assembly.GetManifestResourceStream(resourceName)!;
+        using var stream = assembly.GetManifestResourceStream(resourceName)!;
         using var reader = new StreamReader(stream);
         while (!reader.EndOfStream)
         {

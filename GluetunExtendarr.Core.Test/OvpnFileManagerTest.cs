@@ -25,7 +25,7 @@ public class OvpnFileManagerTest
         var testee = new OvpnFileManager(this.fakeFilePath, this.fileReader, this.fileWriter);
 
         // Act
-        string remote = testee.GetRemote();
+        var remote = testee.GetRemote();
 
         // Assert
         remote.Should().Be("example.com");

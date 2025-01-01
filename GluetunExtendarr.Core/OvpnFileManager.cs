@@ -5,19 +5,24 @@ namespace GluetunExtendarr.Core;
 public class OvpnFileManager(string filePath, IFileReader reader, IFileWriter writer) : IOvpnFileManager
 {
     private const string SegmentSeparator = " ";
-    private const int RemoteLineIndex = 2;
+    private const string RemoteLinePrefix = "remote ";
     private const int RemoteHostIndex = 1;
+    private int RemoteLineIndex => this.Content.IndexOf(this.Content.Single(l => l.StartsWith(OvpnFileManager.RemoteLinePrefix)));
     public IList<string> Content => reader.Read(filePath).ToList();
 
-    public string GetRemote() => this.GetRemoteSegments()[OvpnFileManager.RemoteHostIndex];
+    public string GetRemote() => this.GetLineSegments(this.GetRemoteLine())[OvpnFileManager.RemoteHostIndex];
     public void ReplaceRemote(string newRemote)
     {
-        string[] segments = this.GetRemoteSegments();
+        var oldLine = this.GetRemoteLine();
+        string[] segments = this.GetLineSegments(oldLine);
         segments[OvpnFileManager.RemoteHostIndex] = newRemote;
-        string[] newContent = this.ReplaceRemoteLine(segments);
+
+        var newLine = string.Join(OvpnFileManager.SegmentSeparator, segments);
+
+        string[] newContent = this.Content.Select(l => l == oldLine ? newLine : l).ToArray();
         writer.Write(filePath, newContent);
     }
 
-    private string[] GetRemoteSegments() => this.Content[OvpnFileManager.RemoteLineIndex].Split(OvpnFileManager.SegmentSeparator);
-    private string[] ReplaceRemoteLine(string[] newSegments) => this.Content.Select((line, index) => index == OvpnFileManager.RemoteLineIndex ? string.Join(OvpnFileManager.SegmentSeparator, newSegments) : line).ToArray();
+    private string GetRemoteLine() => this.Content[this.RemoteLineIndex];
+    private string[] GetLineSegments(string line) => line.Split(OvpnFileManager.SegmentSeparator);
 }

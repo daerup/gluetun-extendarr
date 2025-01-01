@@ -15,7 +15,7 @@ public class HostnameResolverTest
         var testee = new HostnameResolver();
 
         // Act
-        IPAddress result = testee.Resolve(hostname);
+        var result = testee.Resolve(hostname);
 
         // Assert
         result.ToString().Should().BeOneOf(ips);

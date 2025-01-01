@@ -1,0 +1,48 @@
+networks:
+    dev:
+        name: dev
+        external: false
+
+services:
+    vpn-extension:
+        container_name: vpn-extension
+        environment:
+            TZ: ${TZ}
+            CONFIG_NAME: ${OPENVPN_CONFIG}
+        volumes:
+            - ./.dev/configs:/input
+            - vpn-config-data:/output
+        build:
+            context: .
+            dockerfile: GluetunExtendarr.Console/Dockerfile
+
+    vpn:
+        container_name: vpn
+        cap_add:
+            - NET_ADMIN
+        devices:
+            - /dev/net/tun:/dev/net/tun
+        volumes:
+            - vpn-config-data:/gluetun/config
+        depends_on:
+            - vpn-extension
+        environment:
+            TZ: ${TZ}
+            VPN_TYPE: openvpn
+            VPN_SERVICE_PROVIDER: custom
+            OPENVPN_USER: ${OPENVPN_USERNAME}
+            OPENVPN_PASSWORD: ${OPENVPN_PASSWORD}
+            OPENVPN_CUSTOM_CONFIG: /gluetun/config/custom.conf
+        image: ghcr.io/qdm12/gluetun
+
+    info: 
+        container_name: info
+        network_mode: service:vpn
+        depends_on:
+            - vpn
+        image: ghcr.io/daerup/ip-info
+
+volumes:
+    vpn-config-data:
+        name: vpn-config-data
+        external: false
