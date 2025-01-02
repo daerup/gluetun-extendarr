@@ -9,8 +9,8 @@ public class ConfigFileProvider(string fileName, string sourceDir, string destin
 {
     public string GetFile()
     {
-        string source = Path.Combine(sourceDir, fileName);
-        string destination = Path.Combine(destinationDir, fileName);
+        string source = Path.GetFullPath(Path.Combine(sourceDir, fileName));
+        string destination = Path.GetFullPath(Path.Combine(destinationDir, fileName));
         File.Copy(source, destination, true);
         return destination;
     }

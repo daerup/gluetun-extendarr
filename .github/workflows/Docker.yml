@@ -41,7 +41,7 @@ jobs:
           tags:  |
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ steps.version.outputs.prefixed-v-version }}
-          file: GluetunExtendarr.Console/Dockerfile
+          file: GluetunExtendarr.App/Dockerfile
           context: .
 
       - name: Create Tag

@@ -1,3 +1,5 @@
+name: glueten-extendarr-dev
+
 networks:
     dev:
         name: dev
@@ -11,6 +13,8 @@ services:
         volumes:
             - ./.dev/configs:/input:ro
             - vpn-config-data:/output
+        ports:
+            - 6969:80
         build:
             context: .
             dockerfile: GluetunExtendarr.Console/Dockerfile
@@ -24,19 +28,22 @@ services:
         volumes:
             - vpn-config-data:/gluetun/config
         depends_on:
-            - vpn-extension
+            vpn-extension:
+                condition: service_healthy
         environment:
             TZ: ${TZ}
             VPN_TYPE: openvpn
             VPN_SERVICE_PROVIDER: custom
             OPENVPN_USER: ${OPENVPN_USERNAME}
             OPENVPN_PASSWORD: ${OPENVPN_PASSWORD}
-            OPENVPN_CUSTOM_CONFIG: /gluetun/config/custom.conf
+            OPENVPN_CUSTOM_CONFIG: /gluetun/config/${OPENVPN_CONFIG}
         image: ghcr.io/qdm12/gluetun
 
     info: 
         container_name: info
         network_mode: service:vpn
+        environment:
+            INTERVAL: 10
         depends_on:
             - vpn
         image: ghcr.io/daerup/ip-info
@@ -48,4 +55,3 @@ volumes:
         driver_opts:
             o: "uid=0,gid=0,mode=0777"
             type: tmpfs
-        external: false

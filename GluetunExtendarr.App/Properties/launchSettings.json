@@ -1,0 +1,22 @@
+{
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "healthz",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:6969"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "DockerfileRunArguments": "-v .\\.dev\\configs:/input:ro -v .\\.dev\\output:/output",
+      "containerName": "gluetun-extendarr-vs",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}"
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json"
+}
