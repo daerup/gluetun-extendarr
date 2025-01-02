@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace GluetunExtendarr.Console;
 
-public record Config
+public record Settings
 {
     [ConfigurationKeyName("CONFIG_NAME")]
     public string ConfigName { get; set; }

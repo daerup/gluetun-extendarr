@@ -1,6 +1,6 @@
 ﻿namespace GluetunExtendarr.Core;
 
-public class OvpnFileManager(IFileProvider provider, IFileReader reader, IFileWriter writer, IFileDuplicator duplicator)
+public class OvpnFileManager(IConfigFileProvider provider, IFileReader reader, IFileWriter writer)
 {
     private const string SegmentSeparator = " ";
     private const string RemoteLinePrefix = "remote ";
@@ -8,8 +8,6 @@ public class OvpnFileManager(IFileProvider provider, IFileReader reader, IFileWr
     private int RemoteLineIndex => this.Content.IndexOf(this.Content.Single(l => l.StartsWith(OvpnFileManager.RemoteLinePrefix)));
     private readonly string filePath = provider.GetFile();
     public IList<string> Content => reader.Read(this.filePath).ToList();
-
-
 
     public string GetRemote() => this.GetLineSegments(this.GetRemoteLine())[OvpnFileManager.RemoteHostIndex];
     public void ReplaceRemote(string newRemote)
@@ -26,9 +24,4 @@ public class OvpnFileManager(IFileProvider provider, IFileReader reader, IFileWr
 
     private string GetRemoteLine() => this.Content[this.RemoteLineIndex];
     private string[] GetLineSegments(string line) => line.Split(OvpnFileManager.SegmentSeparator);
-}
-
-public interface IFileProvider
-{
-    public string GetFile();
 }

@@ -9,12 +9,15 @@ public class OvpnFileManagerTest
     private readonly string fakeFilePath;
     private readonly IFileReader fileReader;
     private readonly IFileWriter fileWriter;
+    private readonly IConfigFileProvider fileProvider;
 
     public OvpnFileManagerTest()
     {
         this.fakeFilePath = "somePath/ovpn.ovpn";
+        this.fileProvider= A.Fake<IConfigFileProvider>();
         this.fileReader = A.Fake<IFileReader>();
         this.fileWriter = A.Fake<IFileWriter>();
+        A.CallTo(() => this.fileProvider.GetFile()).Returns(this.fakeFilePath);
         A.CallTo(() => this.fileReader.Read(this.fakeFilePath)).Returns(this.helper.GetSampleOvpnFile());
     }
 
@@ -22,10 +25,10 @@ public class OvpnFileManagerTest
     public void CanGetRemote()
     {
         // Assert 
-        var testee = new OvpnFileManager(this.fakeFilePath, this.fileReader, this.fileWriter);
+        var testee = new OvpnFileManager(this.fileProvider, this.fileReader, this.fileWriter);
 
         // Act
-        var remote = testee.GetRemote();
+        string remote = testee.GetRemote();
 
         // Assert
         remote.Should().Be("example.com");
@@ -35,7 +38,7 @@ public class OvpnFileManagerTest
     public void CanReplaceRemote()
     {
         // Arrange
-        var testee = new OvpnFileManager(this.fakeFilePath, this.fileReader, this.fileWriter);
+        var testee = new OvpnFileManager(this.fileProvider, this.fileReader, this.fileWriter);
         const string newRemote = "someIpAddress";
         const string expectedFullRemote = $"remote {newRemote} 1194";
 

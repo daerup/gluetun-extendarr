@@ -9,7 +9,7 @@ services:
         environment:
             CONFIG_NAME: ${OPENVPN_CONFIG}
         volumes:
-            - ./.dev/configs:/input
+            - ./.dev/configs:/input:ro
             - vpn-config-data:/output
         build:
             context: .
@@ -44,4 +44,8 @@ services:
 volumes:
     vpn-config-data:
         name: vpn-config-data
+        driver: local
+        driver_opts:
+            o: "uid=0,gid=0,mode=0777"
+            type: tmpfs
         external: false
