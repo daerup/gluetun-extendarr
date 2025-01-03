@@ -399,7 +399,7 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-.dev/configs/*.ovpn
+.dev/configs/
 
 .env
 
