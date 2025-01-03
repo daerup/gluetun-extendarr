@@ -39,7 +39,7 @@ RUN dotnet build "./GluetunExtendarr.App.csproj" -c $BUILD_CONFIGURATION -o /app
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./GluetunExtendarr.App.csproj" -c $BUILD_CONFIGURATION -o /app/publish
+RUN dotnet publish "./GluetunExtendarr.App.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:DebugType=none /p:DebugSymbols=false /p:PublishTrimmed=true /p:Optimize=true /p:PublishSingleFile=false
 
 # This stage is used as the base for the final stage when launching from VS to support debugging in regular mode (Default when not using the Debug configuration)
 FROM base AS aotdebug

@@ -1,0 +1,50 @@
+name: glueten-extendarr-dev
+
+services:
+    vpn-extension:
+        container_name: vpn-extension
+        environment:
+            CONFIG_NAME: ${OPENVPN_CONFIG}
+            # SERILOG__MINIMUMLEVEL__Default: Debug
+        volumes:
+            - <Path-to-config>:/input:ro
+            - vpn-config-data:/output
+        image: ghcr.io/daerup/gluetun-extendarr
+
+    vpn:
+        container_name: vpn
+        cap_add:
+            - NET_ADMIN
+        devices:
+            - /dev/net/tun:/dev/net/tun
+        volumes:
+            - vpn-config-data:/config
+        depends_on:
+            vpn-extension:
+                condition: service_healthy
+        environment:
+            VPN_TYPE: openvpn
+            VPN_SERVICE_PROVIDER: custom
+            OPENVPN_USER: ${OPENVPN_USERNAME}
+            OPENVPN_PASSWORD: ${OPENVPN_PASSWORD}
+            OPENVPN_CUSTOM_CONFIG: /config/${OPENVPN_CONFIG}
+        image: ghcr.io/qdm12/gluetun
+
+    info: 
+        container_name: info
+        network_mode: service:vpn
+        environment:
+            INTERVAL: 1
+        depends_on:
+            vpn:
+                condition: service_healthy
+        image: ghcr.io/daerup/ip-info
+
+volumes:
+    vpn-config-data:
+        name: vpn-config-data
+        driver: local
+        driver_opts:
+            o: "uid=0,gid=0,mode=0777"
+            type: tmpfs
+            device: tmpfs

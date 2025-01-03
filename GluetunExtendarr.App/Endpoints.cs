@@ -10,7 +10,6 @@ internal abstract class Endpoints
 
     internal static void RunAction(IOptions<Settings> settings, ILogger<Endpoints> logger)
     {
-        Thread.Sleep(TimeSpan.FromSeconds(10));
         var fileProvider = new ConfigFileProvider(settings.Value.ConfigName, settings.Value.InputDir, settings.Value.OutputDir);
         var resolver = new HostnameResolver();
         var manager = new OvpnFileManager(fileProvider, new FileReader(), new FileWriter());
@@ -26,5 +25,5 @@ internal abstract class Endpoints
         hasRun = true;
     }
 
-    public static HealthCheckResult HealthCheckAction() => hasRun ? HealthCheckResult.Healthy("Config file has been created") : HealthCheckResult.Unhealthy("Extendarr has not run yet");
+    public static HealthCheckResult HealthCheckAction() => hasRun ? HealthCheckResult.Healthy("Config file has been created") : HealthCheckResult.Unhealthy("GluetunExtendarr has not run yet");
 }

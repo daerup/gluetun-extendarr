@@ -27,7 +27,7 @@ services:
         devices:
             - /dev/net/tun:/dev/net/tun
         volumes:
-            - vpn-config-data:/gluetun/config
+            - vpn-config-data:/config
         depends_on:
             vpn-extension:
                 condition: service_healthy
@@ -37,16 +37,17 @@ services:
             VPN_SERVICE_PROVIDER: custom
             OPENVPN_USER: ${OPENVPN_USERNAME}
             OPENVPN_PASSWORD: ${OPENVPN_PASSWORD}
-            OPENVPN_CUSTOM_CONFIG: /gluetun/config/${OPENVPN_CONFIG}
+            OPENVPN_CUSTOM_CONFIG: /config/${OPENVPN_CONFIG}
         image: ghcr.io/qdm12/gluetun
 
     info: 
         container_name: info
         network_mode: service:vpn
         environment:
-            INTERVAL: 10
+            INTERVAL: 1
         depends_on:
-            - vpn
+            vpn:
+                condition: service_healthy
         image: ghcr.io/daerup/ip-info
 
 volumes:
