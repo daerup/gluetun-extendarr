@@ -10,6 +10,7 @@ services:
         container_name: vpn-extension
         environment:
             CONFIG_NAME: ${OPENVPN_CONFIG}
+            # SERILOG__MINIMUMLEVEL__Default: Debug
         volumes:
             - ./.dev/configs:/input:ro
             - vpn-config-data:/output

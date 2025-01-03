@@ -39,7 +39,7 @@ RUN dotnet build "./GluetunExtendarr.App.csproj" -c $BUILD_CONFIGURATION -o /app
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./GluetunExtendarr.App.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=true
+RUN dotnet publish "./GluetunExtendarr.App.csproj" -c $BUILD_CONFIGURATION -o /app/publish
 
 # This stage is used as the base for the final stage when launching from VS to support debugging in regular mode (Default when not using the Debug configuration)
 FROM base AS aotdebug
@@ -65,8 +65,11 @@ ENV CONFIG_NAME=$CONFIG_NAME
 
 ENV DISTROLESS_HEALTHCHECKS_URI="http://localhost/healthz"
 COPY --from=ghcr.io/alexaka1/distroless-dotnet-healthchecks:1.0.0 / /healthchecks
-HEALTHCHECK --interval=5s --timeout=10s --start-period=5s --retries=10 CMD ["/healthchecks/Distroless.HealthChecks"]
+HEALTHCHECK --start-period=15s CMD ["/healthchecks/Distroless.HealthChecks"]
 
-ENV ASPNETCORE_HTTP_PORTS=80
 EXPOSE 80
+VOLUME /input
+ENV ASPNETCORE_HTTP_PORTS=80
+ENV SERILOG__MINIMUMLEVEL__Default="Information"
+
 ENTRYPOINT ["./GluetunExtendarr.App"]

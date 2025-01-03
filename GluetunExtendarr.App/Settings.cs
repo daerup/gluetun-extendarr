@@ -5,7 +5,7 @@ public record Settings
 {
     [ConfigurationKeyName("CONFIG_NAME")]
     public string ConfigName { get; set; }
-    
+
     [ConfigurationKeyName("INPUT_DIR")]
     public string InputDir { get; set; }
 
