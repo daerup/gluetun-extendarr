@@ -5,7 +5,7 @@ ARG LAUNCHING_FROM_VS
 # This sets the base image for final, but only if LAUNCHING_FROM_VS has been defined
 ARG FINAL_BASE_IMAGE=${LAUNCHING_FROM_VS:+aotdebug}
 
-# VS uses --target base (for some fucking reason, what even is the point of LAUNCHING_FROM_VS?)
+# Set global ARGs used for environment variables
 ARG INPUT_DIR="/input"
 ARG OUTPUT_DIR="/output"
 ARG CONFIG_NAME="custom.conf"
