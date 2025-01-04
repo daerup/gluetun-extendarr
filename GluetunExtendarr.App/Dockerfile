@@ -65,7 +65,7 @@ ENV CONFIG_NAME=$CONFIG_NAME
 
 ENV DISTROLESS_HEALTHCHECKS_URI="http://localhost/healthz"
 COPY --from=ghcr.io/alexaka1/distroless-dotnet-healthchecks:1.0.0 / /healthchecks
-HEALTHCHECK --start-period=15s CMD ["/healthchecks/Distroless.HealthChecks"]
+HEALTHCHECK --start-period=5s CMD ["/healthchecks/Distroless.HealthChecks"]
 
 EXPOSE 80
 VOLUME /input
