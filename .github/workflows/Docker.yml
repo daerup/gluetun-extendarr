@@ -59,4 +59,4 @@ jobs:
           tag: ${{ steps.version.outputs.prefixed-v-version }}
           name: Release ${{ steps.version.outputs.prefixed-v-version }}
           generateReleaseNotes: true
-          prerelease: true
+          prerelease: false
