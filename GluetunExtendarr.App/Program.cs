@@ -9,7 +9,7 @@ builder.Services.AddSerilog(c => c.ReadFrom.Configuration(builder.Configuration)
 
 builder.Services.AddExtendarrServices();
 
-builder.Services.AddHealthChecks().AddCheck<HasCompletedHealthCheck>("Used for docker");
+builder.Services.AddHealthChecks().AddCheck<HasCompletedHealthCheck>($"{nameof(ExtendarrRunner)}{nameof(ExtendarrRunner.HasCompleted)}");
 
 var app = builder.Build();
 app.MapHealthChecks("/healthz");
